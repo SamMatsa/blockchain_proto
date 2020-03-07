@@ -1,44 +1,62 @@
 <template>
-    <div>
-        <h4>Login</h4>
-        <form>
-            <label for="email" >E-Mail Address</label>
-            <div>
-                <input id="email" type="email" v-model="email" required autofocus>
-            </div>
-            <div>
-                <label for="password" >Password</label>
-                <div>
-                    <input id="password" type="password" v-model="password" required>
-                </div>
-            </div>
-            <div>
-                <button type="submit" @click="handleSubmit">
-                    Login
-                </button>
-            </div>
-        </form>
-        <h3 @click="goTodetail()">
+<b-container>
+  <div>
+    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+      <b-form-group
+        id="input-group-1"
+        label="Email address:"
+        label-for="input-1"
+        description="We'll never share your email with anyone else."
+      >
+        <b-form-input
+          id="input-1"
+          v-model="form.email"
+          type="email"
+          required
+          placeholder="Enter email"
+        ></b-form-input>
+      </b-form-group>
+
+      <b-form-group id="input-group-2" label="Your password:" label-for="input-2">
+        <b-form-input
+          id="input-2"
+          type="password"
+          v-model="form.password"
+          required
+          placeholder="Enter password"
+        ></b-form-input>
+      </b-form-group>
+      
+
+      <b-button type="submit" variant="primary">Submit</b-button>
+      <b-button type="reset" variant="danger">Reset</b-button>
+    </b-form>
+   
+    <h3 @click="goTodetail()">
             Register
         </h3>
-    </div>
+  </div>
+  </b-container>
 </template>
 
 <script>
     export default {
         data(){
             return {
-                email : "",
-                password : ""
-            }
+                form: {
+                  email: '',
+                  password: '',
+                },
+                  show: true
+              }
         },
         methods : {
-            handleSubmit(e){
-                e.preventDefault()
-                if (this.password.length > 0) {
+            onSubmit(evt){
+                evt.preventDefault()
+                if (this.form.password.length > 0) {
                     this.$http.post('http://localhost:3000/login', {
-                        email: this.email,
-                        password: this.password
+                        email: this.form.email,
+                        password: this.form.password
                     })
                     .then(response => {
                         let is_admin = response.data.user.is_admin
@@ -61,6 +79,17 @@
                         }
                     })
                 }
+            },
+            onReset(evt) {
+              evt.preventDefault()
+              // Reset our form values
+              this.form.email = ''
+              this.form.name = ''
+              // Trick to reset/clear native browser form validation state
+              this.show = false
+              this.$nextTick(() => {
+                this.show = true
+              })
             },
             goTodetail() {
                 this.$router.push({name:'register'})
