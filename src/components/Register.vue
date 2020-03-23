@@ -78,10 +78,10 @@
 
                 if (this.form.password === this.form.password_confirmation)
                 {
-                    let url = "http://localhost:3000/register"
+                    let url = "https://dhhw-vs-node-server.niklas-hauschel.de/register"
                     
                     //TODO Write admin for radio button!
-                    if(this.form.is_admin == 1) url = "http://localhost:3000/register-admin", console.log("Admin", this.form.is_admin, this.form.name)
+                    if(this.form.is_admin == 1) url = "https://dhhw-vs-node-server.niklas-hauschel.de/register-admin", console.log("Admin", this.form.is_admin, this.form.name)
                     this.$http.post(url, {
                         name: this.form.name,
                         email: this.form.email,

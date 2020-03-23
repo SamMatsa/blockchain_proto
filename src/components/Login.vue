@@ -54,7 +54,7 @@
             onSubmit(evt){
                 evt.preventDefault()
                 if (this.form.password.length > 0) {
-                    this.$http.post('http://localhost:3000/login', {
+                    this.$http.post('https://dhhw-vs-node-server.niklas-hauschel.de/login', {
                         email: this.form.email,
                         password: this.form.password
                     })
