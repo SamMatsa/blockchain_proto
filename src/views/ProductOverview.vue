@@ -21,20 +21,38 @@ export default {
     },
     methods:{
       getList(){
-        axios.get(
-          'http://localhost:8080/getProducts',
-          {withCredentials: true,
-          headers:{
-            "Accept": "application/json",
-            "Content-Type": "application/json"
+
+        var user = "vsapiuser";
+        var pass = "BejB75sV";
+        var url = 'http://localhost:8080/getProducts';
+
+        var authorizationBasic = window.btoa(user + ':' + pass);
+        var config = {
+          "headers":{
+            "Authorization": "Basic " + authorizationBasic
           }
-          },{
-            auth: {
-              username: 'vsapiuser',
-              password: 'BejB75sV'
-          }}).then(function(response){
-            console.log(response);
-          })
+        };
+
+        axios.get(url, config).then(function(response){
+          console.log(response);
+        })
+
+        // axios.get(
+        //   'http://localhost:8080/getProducts',
+        //   {withCredentials: true,
+        //   headers:{
+        //     "Accept": "application/json",
+        //     "Content-Type": "application/json"
+        //   }
+        //   }
+        //   ,{
+        //     auth: {
+        //       username: 'vsapiuser',
+        //       password: 'BejB75sV'
+        //   }
+        //   }).then(function(response){
+        //     console.log(response);
+        //   })
       }
     },
     mounted(){
