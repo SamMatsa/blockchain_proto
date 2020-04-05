@@ -16,15 +16,22 @@ export default {
     },
     data(){
       return{
-        list: []
+        list: [],
+        polling : null,
+        lastResponseObject : null,
+        productsFinal: []
       }
     },
     methods:{
-      getList(){
+      async sendRequest(endpoint){
+             
+        //https://stackoverflow.com/questions/44072750/how-to-send-basic-auth-with-axios
 
+        var ep = endpoint;
         var user = "vsapiuser";
         var pass = "BejB75sV";
-        var url = 'http://localhost:8080/getProducts';
+        var url = `https://vsapi.wegmann.dev/${ep}`;
+
 
         var authorizationBasic = window.btoa(user + ':' + pass);
         var config = {
@@ -33,30 +40,56 @@ export default {
           }
         };
 
-        axios.get(url, config).then(function(response){
-          console.log(response);
-        })
+        var res = await axios.get(url, config);
+        this.lastResponseObject = res.data;
+        return res.data;
+      },
 
-        // axios.get(
-        //   'http://localhost:8080/getProducts',
-        //   {withCredentials: true,
-        //   headers:{
-        //     "Accept": "application/json",
-        //     "Content-Type": "application/json"
-        //   }
-        //   }
-        //   ,{
-        //     auth: {
-        //       username: 'vsapiuser',
-        //       password: 'BejB75sV'
-        //   }
-        //   }).then(function(response){
-        //     console.log(response);
-        //   })
+      pollDataIntervall(){
+        this.polling = setInterval(()=> {
+          this.pollData();
+        },5000)
+      },
+
+      async pollData(){
+          var productsRaw = await this.sendRequest("getProducts");
+          this.productsFinal = await this.addTransactionsToProducts(productsRaw);
+          console.log(this.productsFinal);
+      },
+
+      async addTransactionsToProducts(products){
+        var productsArray = products;
+        var taskNames = await this.sendRequest("getTasks");
+
+        for (var i = 0; i < productsArray.length; i++) {
+          var transactions = await this.sendRequest(`getTransactions?product_id=${productsArray[i].id}`);
+
+            for (var y = 0; y < transactions.length; y++) {
+              var taskId = transactions[y].task_id;
+              var taskName = "";
+
+              for (var x = 0; x < taskNames.length; x++) {
+                if(taskId === taskNames[x].task_id){
+                  taskName = taskNames[x].description;
+                }
+              }
+
+              transactions[y].task_name = taskName;
+
+            }
+            
+          productsArray[i].transactions = transactions;
+        }
+
+        return productsArray;
       }
     },
-    mounted(){
-      this.getList();
+    beforeDestroy(){
+      clearInterval(this.polling);
+    },
+    created(){
+      this.pollData();
+      this.pollDataIntervall();
     }
 }
 </script>
