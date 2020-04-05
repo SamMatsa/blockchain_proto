@@ -1,38 +1,43 @@
 <template>
     <div>
       <b-col>
-    <b-card
-      img-src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRIyZk8xeEQgaRz2BlnyS9kijaRj6_5LMlZnW4FpdwaKsNT6kNr"
-      img-alt="Image"
-      img-top
-      tag="article"
-      style="max-width: 20rem;"
-      class="mb-2"
-     
-    >
-    <b-card-title>
-      {{name}}
-      </b-card-title>
-    <b-card-text v-for="(value) in MachineTask" v-bind:key="value.id">
-        {{ value.description }},  {{ value.duration }}s
-    </b-card-text>
+        <b-card
+          img-src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRIyZk8xeEQgaRz2BlnyS9kijaRj6_5LMlZnW4FpdwaKsNT6kNr"
+          img-alt="Image"
+          img-top
+          tag="article"
+          class="mb-2"
+          style="max-width: 20rem;"
+        >
+        <b-card-title>
+          {{name}}
+          </b-card-title>
+        <b-card-text v-for="(value) in MachineTask" v-bind:key="value.id">
+            {{ value.description }},  {{ value.duration }}s
+        </b-card-text>
 
-    <div>
-    <b-dropdown id="dropdown-buttons" text="Aktuell: Produkt ABC" class="m-2">
-      <b-dropdown-item-button>Produkt 1 | Schrauben | 12:44</b-dropdown-item-button>
-      <b-dropdown-item-button>Produkt 2 | Schweißen | 12:32</b-dropdown-item-button>
-      <b-dropdown-item-button>Produkt 3 | Schrauben | 12:20</b-dropdown-item-button>
-      <b-dropdown-item-button>Produkt 4 | Schrauben | 12:08</b-dropdown-item-button>
-    </b-dropdown>
+        <div>
+            <div v-if="!newList">
+              <b-button v-b-modal.modal-scrollable v-on:click="onShowModal" disable>No product planned</b-button>
+            </div>
+            <div v-if="newList">
+              <b-button v-b-modal.modal-scrollable v-on:click="onShowModal">Todo:current Product</b-button>
 
-  </div> 
-  </b-card>
-</b-col>
-</div>
+              <b-modal id="modal-scrollable" v-if="showModal"  @close="showModal=false" @cancel="showModal=false" no-close-on-backdrop  @ok="showModal=false" scrollable title="Scrollable Content">
+                    <b-table striped hover :items="newList"></b-table>
+              </b-modal>
+            </div>
+              
+      </div> 
+      </b-card>
+    </b-col>
+  </div>
 </template>
 
 
 <script>
+
+
 
 import axios from 'axios'
 
@@ -43,17 +48,20 @@ export default {
         name: String,
     }, 
     data: () => ({
-        MachineTask: []
+        MachineTask: [],
+        MachineTransactions: [],
+        newList: [],
+        showModal: false
+
     }), 
     mounted() {
       this.getTasks(this.id)
+      this.getTransactions(this.id)
     },
     methods: {
       getTasks(index) {
-       console.log(index)
         var user = "vsapiuser";
         var pass = "BejB75sV";
-        // var url = 'http://localhost:8081/getTaks';
         var url = 'https://vsapi.wegmann.dev/getTasks';
 
         var authorizationBasic = window.btoa(user + ':' + pass);
@@ -62,13 +70,62 @@ export default {
             "Authorization": "Basic " + authorizationBasic
           }
         };
-
-        axios.get(url, config).then(response => {
+      var newUrl = url + "?machine_id="+index
+        axios.get(newUrl, config).then(response => {
           this.MachineTask = response.data
-          console.log("Machine Tasks",this.MachineTask)
         })
-        }
-      
+        },
+      getTransactions(index) {
+        var user = "vsapiuser";
+        var pass = "BejB75sV";
+        var url = 'https://vsapi.wegmann.dev/getTransactions';
+
+        var authorizationBasic = window.btoa(user + ':' + pass);
+        var config = {
+          "headers":{
+            "Authorization": "Basic " + authorizationBasic
+          }
+        };
+      var newUrl = url + "?machine_id="+index
+
+        axios.get(newUrl, config).then(response => {
+          for(var i=0; i < response.data.length; i++) {
+            this.getProductName(response.data[i].product_id, response.data[i]).then(ok => {
+              console.log(ok)
+
+            });
+          }
+        })
+       
+        
+        
+      },
+      getProductName(id, response1) {
+        return new Promise((resolve) => {
+           var user = "vsapiuser";
+          var pass = "BejB75sV";
+          var url = 'https://vsapi.wegmann.dev/getProduct';
+
+          var authorizationBasic = window.btoa(user + ':' + pass);
+          var config = {
+            "headers":{
+              "Authorization": "Basic " + authorizationBasic
+            }
+          };
+          var newUrl = url + "/" + id
+          var productName1 = ""
+
+            axios.get(newUrl, config).then(response => {
+              productName1 = response.data.name
+              this.newList.push({Product: productName1, Task: response1.task_id, End: response1.end, Begin: response1.begin, Status: response1.status})
+              resolve("Success");
+            })    
+          
+        });
+      },
+      onShowModal(){
+          this.showModal = true;
+      },
     }
-}
+    }
 </script>
