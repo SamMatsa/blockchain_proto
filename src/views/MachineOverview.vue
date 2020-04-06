@@ -28,7 +28,6 @@ export default {
   }, 
   methods: {
     getMachines(){
-      console.log("Test")
       
         var user = "vsapiuser";
         var pass = "BejB75sV";
@@ -44,7 +43,7 @@ export default {
 
         axios.get(url, config).then(response => {
           this.theList = response.data
-          console.log(this.theList);
+          // console.log(this.theList);
         })
     
     },
