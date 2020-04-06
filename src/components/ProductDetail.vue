@@ -1,11 +1,11 @@
 <template>
-
+<b-col>
   <b-card
     :title="name"
     img-alt="Image"
     img-top
     tag="article"
-    style="max-width: 20rem;"
+    style="max-width: 30rem;"
     class="mb-2"
   >
   <b-card-text >
@@ -17,7 +17,7 @@
   </label> -->
 
   <b-container>
-  <b-row align-v="center">
+  <!-- <b-row align-v="center"> -->
 
   <li v-for="trans in transactions" :key="trans.id">
     {{ trans.task }} | {{ trans.machine }} | {{ getStatus(trans.status) }}
@@ -26,10 +26,10 @@
       :taskName="trans.task"
     ></product-detail-list-component > -->
 
-  </b-row>
+  <!-- </b-row> -->
 </b-container>
   </b-card>
-
+</b-col>
 
 </template>
 

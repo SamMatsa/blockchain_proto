@@ -2,7 +2,7 @@
   <div id="app">
 <div id="navigator" style="margin-bottom: 20px">
   <b-navbar toggleable="lg" type="dark" variant="info">
-    <b-navbar-brand href="#">BLOCKCHAIN</b-navbar-brand>
+    <b-navbar-brand href="#">AGENT</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -10,7 +10,7 @@
       <b-navbar-nav>
         <b-nav-item to="/machine">Maschinen</b-nav-item>
         <b-nav-item to="/product">Produkte</b-nav-item>
-        <b-nav-item to="/service">Servicetechniker</b-nav-item>
+        <!-- <b-nav-item to="/service">Servicetechniker</b-nav-item> -->
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
