@@ -1,14 +1,40 @@
 <template>
-<b-container>
+
+        <div class="container-fluid">
+          <div class="row">
+<!-- <b-container> -->
+  <!-- <b-row align-v="center"> -->
+
+    <product-detail
+    v-for="product in productsFinal" :key="product.id"
+    :name="product.name"
+    :type="product.type"
+    :transactions="product.transactions"
+    ></product-detail>
+
+  <!-- </b-row> -->
+<!-- </b-container> -->
+            <!-- <div class="col-sm d-flex">
+              <div class="card card-body flex-fill">
+                Another small card content.
+              </div>
+            </div> -->
+          </div>
+        </div>
+
+
+
+
+<!-- <b-container>
   <b-row align-v="center">
     <product-detail 
     v-for="product in productsFinal" :key="product.id"
     :name="product.name"
-    :tasks="product.taks"
+    :type="product.type"
     :transactions="product.transactions"
     ></product-detail>
   </b-row>
-</b-container>
+</b-container> -->
 </template>
 
 <script>
@@ -107,8 +133,10 @@ export default {
             var machineName = transactionTemp.machine.name;
             var transactionTaskName = transactionTemp.task.description;
             var transactionTaskStatus = transactionTemp.status;
+            var transactionId = transactionTemp.id;
 
             productTransactions.push({
+              id: transactionId,
               machine: machineName, 
               task: transactionTaskName, 
               status: transactionTaskStatus})
