@@ -1,7 +1,12 @@
 <template>
 <b-container>
   <b-row align-v="center">
-    <b-col><ProductDetail /></b-col>
+    <product-detail 
+    v-for="product in productsFinal" :key="product.id"
+    :name="product.name"
+    :tasks="product.taks"
+    :transactions="product.transactions"
+    ></product-detail>
   </b-row>
 </b-container>
 </template>
@@ -54,16 +59,18 @@ export default {
       async pollData(){
           var productsRaw = await this.sendRequest("getProducts");
           this.productsFinal = await this.addTransactionsToProducts(productsRaw);
-          console.log(this.productsFinal);
+          // console.log(this.productsFinal);
       },
 
       async addTransactionsToProducts(products){
+        var newArray = [];
         var productsArray = products;
         var taskNames = await this.sendRequest("getTasks");
 
         for (var i = 0; i < productsArray.length; i++) {
           var transactions = await this.sendRequest(`getTransactions?product_id=${productsArray[i].id}`);
 
+          if(transactions != null){
             for (var y = 0; y < transactions.length; y++) {
               var taskId = transactions[y].task_id;
               var taskName = "";
@@ -77,11 +84,47 @@ export default {
               transactions[y].task_name = taskName;
 
             }
-            
+
           productsArray[i].transactions = transactions;
+
+          }
+          else
+          {
+            productsArray[i].transactions = [];
+          }
         }
 
-        return productsArray;
+        for (var k = 0; k < productsArray.length; k++) {
+          var productName = productsArray[k].name;
+          var productType = productsArray[k].model_name;
+          var productTransactions = [];
+
+
+          for (var g = 0; g < productsArray[k].transactions.length; g++){
+              
+            var transactionTemp = productsArray[k].transactions[g];
+
+            var machineName = transactionTemp.machine.name;
+            var transactionTaskName = transactionTemp.task.description;
+            var transactionTaskStatus = transactionTemp.status;
+
+            productTransactions.push({
+              machine: machineName, 
+              task: transactionTaskName, 
+              status: transactionTaskStatus})
+
+          }
+
+
+          newArray.push({
+            name: productName, 
+            type: productType,
+            transactions: productTransactions
+            })
+
+        }
+
+        return newArray;
       }
     },
     beforeDestroy(){
