@@ -4,7 +4,7 @@
           <div class="row">
 <!-- <b-container> -->
   <!-- <b-row align-v="center"> -->
-
+    <h1 v-if="!productsFinal">Loading...</h1>
     <product-detail
     v-for="product in productsFinal" :key="product.id"
     :name="product.name"
@@ -50,7 +50,7 @@ export default {
         list: [],
         polling : null,
         lastResponseObject : null,
-        productsFinal: []
+        productsFinal: null
       }
     },
     methods:{
@@ -83,8 +83,6 @@ export default {
       },
 
       async pollData(){
-          var tempi = await this.sendRequest("getTransactions");
-          console.log(tempi)
           var productsRaw = await this.sendRequest("getProducts");
           this.productsFinal = await this.addTransactionsToProducts(productsRaw);
           // console.log(this.productsFinal);
@@ -155,7 +153,7 @@ export default {
         }
 
         return newArray;
-      }
+      },
     },
     beforeDestroy(){
       clearInterval(this.polling);
@@ -164,5 +162,6 @@ export default {
       this.pollData();
       this.pollDataIntervall();
     }
+
 }
 </script>
