@@ -19,7 +19,7 @@
   <b-container>
   <!-- <b-row align-v="center"> -->
 
-  <li v-for="trans in transactions" :key="trans.id">
+  <li style="list-style-type : none" v-for="trans in transactions" :key="trans.id">
     {{ trans.task }} | {{ trans.machine }} | {{ getStatus(trans.status) }}
   </li>
     <!-- <product-detail-list-component v-for="trans in transactions" :key="trans.id"

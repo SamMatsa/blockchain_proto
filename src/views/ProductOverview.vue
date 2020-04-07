@@ -61,7 +61,7 @@ export default {
         var ep = endpoint;
         var user = "vsapiuser";
         var pass = "BejB75sV";
-        var url = `https://vsapi.wegmann.dev/${ep}`;
+        var url = `http://localhost:8080/${ep}`;
 
 
         var authorizationBasic = window.btoa(user + ':' + pass);
@@ -83,6 +83,8 @@ export default {
       },
 
       async pollData(){
+          var tempi = await this.sendRequest("getTransactions");
+          console.log(tempi)
           var productsRaw = await this.sendRequest("getProducts");
           this.productsFinal = await this.addTransactionsToProducts(productsRaw);
           // console.log(this.productsFinal);
