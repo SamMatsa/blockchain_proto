@@ -2,24 +2,32 @@
         <div class="container-fluid">
           <div class="row">
     <h1 v-if="productsFinal.length === 0">Loading...</h1>
-    
+
+  <div class="columns" v-for="chunk in productChunks" :key="chunk.id">   
     <product-detail
-    v-for="product in productsFinal" :key="product.id"
+    v-for="product in chunk" :key="product.id"
     :name="product.name"
     :type="product.type"
     :transactions="product.transactions"
     ></product-detail>
+  </div>
           </div>
         </div>
 </template>
 
 <script>
 import ProductDetail from '../components/ProductDetail';
+import _ from 'lodash'
 import axios from 'axios';
 
 export default {
     components:{
         ProductDetail
+    },
+    computed: {
+      productChunks(){
+          return _.chunk(Object.values(this.productsFinal), 2);
+      }
     },
     data(){
       return{
