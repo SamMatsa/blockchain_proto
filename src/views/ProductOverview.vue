@@ -1,40 +1,16 @@
 <template>
-
         <div class="container-fluid">
           <div class="row">
-<!-- <b-container> -->
-  <!-- <b-row align-v="center"> -->
-    <h1 v-if="!productsFinal">Loading...</h1>
+    <h1 v-if="productsFinal.length === 0">Loading...</h1>
+    
     <product-detail
     v-for="product in productsFinal" :key="product.id"
     :name="product.name"
     :type="product.type"
     :transactions="product.transactions"
     ></product-detail>
-
-  <!-- </b-row> -->
-<!-- </b-container> -->
-            <!-- <div class="col-sm d-flex">
-              <div class="card card-body flex-fill">
-                Another small card content.
-              </div>
-            </div> -->
           </div>
         </div>
-
-
-
-
-<!-- <b-container>
-  <b-row align-v="center">
-    <product-detail 
-    v-for="product in productsFinal" :key="product.id"
-    :name="product.name"
-    :type="product.type"
-    :transactions="product.transactions"
-    ></product-detail>
-  </b-row>
-</b-container> -->
 </template>
 
 <script>
@@ -50,14 +26,11 @@ export default {
         list: [],
         polling : null,
         lastResponseObject : null,
-        productsFinal: null
+        productsFinal: []
       }
     },
     methods:{
       async sendRequest(endpoint){
-             
-        //https://stackoverflow.com/questions/44072750/how-to-send-basic-auth-with-axios
-
         var ep = endpoint;
         var user = "vsapiuser";
         var pass = "BejB75sV";

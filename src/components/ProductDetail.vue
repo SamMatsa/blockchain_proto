@@ -11,22 +11,13 @@
   <b-card-text >
       {{ this.type }}
   </b-card-text>
-  <!-- <p> {{ this.type }}</p>
-  <label v-for="transaction in transactions" :key="transaction.id">
-   <b-alert show :variant="returnSuccessVar()">{{ this.transactions[0].task }}</b-alert>
-  </label> -->
 
   <b-container>
-  <!-- <b-row align-v="center"> -->
-
+  <li style="list-style-type : none" v-if="transactions.length === 0">Production starting soon...</li>
   <li style="list-style-type : none" v-for="trans in transactions" :key="trans.id">
     {{ trans.task }} | {{ trans.machine }} | {{ getStatus(trans.status) }}
   </li>
-    <!-- <product-detail-list-component v-for="trans in transactions" :key="trans.id"
-      :taskName="trans.task"
-    ></product-detail-list-component > -->
 
-  <!-- </b-row> -->
 </b-container>
   </b-card>
 </b-col>
@@ -34,9 +25,7 @@
 </template>
 
 <script>
-// import ProductDetailListComponent from '../components/ProductDetailListComponent';
 export default {
-  // components: {ProductDetailListComponent},
   props:["name", "type", "transactions"],
   data(){
       return{
