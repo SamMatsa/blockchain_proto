@@ -42,7 +42,8 @@ export default {
         var ep = endpoint;
         var user = "vsapiuser";
         var pass = "BejB75sV";
-        var url = `http://localhost:8080/${ep}`;
+        // var url = `http://localhost:8080/${ep}`;
+        var url = `https://vsapi.wegmann.dev/${ep}`;
 
 
         var authorizationBasic = window.btoa(user + ':' + pass);
@@ -66,7 +67,6 @@ export default {
       async pollData(){
           var productsRaw = await this.sendRequest("getProducts");
           this.productsFinal = await this.addTransactionsToProducts(productsRaw);
-          // console.log(this.productsFinal);
       },
 
       async addTransactionsToProducts(products){
@@ -116,6 +116,7 @@ export default {
             var transactionTaskStatus = transactionTemp.status;
             var transactionId = transactionTemp.id;
 
+            //push to clean array
             productTransactions.push({
               id: transactionId,
               machine: machineName, 
@@ -124,7 +125,7 @@ export default {
 
           }
 
-
+          //push to clean array
           newArray.push({
             name: productName, 
             type: productType,
