@@ -1,9 +1,9 @@
 <template>
 <b-container>
-  <b-row v-if="theList" align-v="center">
-      <MachineDetail   v-for="(data) in theList" v-bind:key="data.id" v-bind:name="data.name" v-bind:transactions="data.transactions" v-bind:tasks="data.tasks" v-bind:currentProduct="data.currentProduct" :id="data.id" />
+  <b-row v-if="machines" align-v="center">
+      <MachineDetail   v-for="(data) in machines" v-bind:key="data.id" v-bind:name="data.name" v-bind:transactions="data.transactions" v-bind:tasks="data.tasks" v-bind:currentProduct="data.currentProduct" :id="data.id" />
   </b-row>
-  <b-row v-if="!theList" align-v="center">
+  <b-row v-if="!machines" align-v="center">
       <MachineDetail  v-bind:name="null" v-bind:transactions="null" v-bind:tasks="null" :id="null" />
   </b-row>
 </b-container>
@@ -17,7 +17,7 @@ export default {
   data() {
    return {
   options: [],
-    theList: [],
+    machines: [],
     new: [],
     errors: [],
     url: 'https://vsapi.wegmann.dev/getMachines',
@@ -31,30 +31,29 @@ export default {
   }, 
   methods: {
     async getMachines(){
-        var responseRequest = await this.sendRequest("getMachines");
-        for(var i=0; i<responseRequest.length; i++) {
-          var responseRequest2 = await this.sendRequest("getTransactions?machine_id="+responseRequest[i].id);
+        var machineResponse = await this.sendRequest("getMachines");
+        for(var i=0; i<machineResponse.length; i++) {
+          var transactionResponse = await this.sendRequest("getTransactions?machine_id="+machineResponse[i].id);
             
           var newList = []
           var name = null
-          if (responseRequest2) {
-            for(var j=0; j < responseRequest2.length; j++) {
-              var response1 = responseRequest2[j]
-              newList.push({Product: response1.product.name, Task: response1.task.description, End: response1.end, Begin: response1.begin, Status: response1.status})
-              if (response1.status == "in progress") {
-                name = response1.product.name
+          if (transactionResponse) {
+            for(var j=0; j < transactionResponse.length; j++) {
+              var transactions = transactionResponse[j]
+              newList.push({Product: transactions.product.name, Task: transactions.task.description, End: transactions.end, Begin: transactions.begin, Status: transactions.status})
+              if (transactions.status == "in progress") {
+                name = transactions.product.name
               }
 
             }
-            responseRequest[i].transactions = newList
+            machineResponse[i].transactions = newList
           } else {
-            responseRequest[i].transactions = null
+            machineResponse[i].transactions = null
           }
-           responseRequest[i].currentProduct = name
+           machineResponse[i].currentProduct = name
         
         }
-         this.theList = responseRequest
-         console.log(this.theList)
+         this.machines = machineResponse
     },
 
 
