@@ -1,25 +1,48 @@
 <template>
-      <b-card
-    title="Produkt ABC"
-    img-src="https://www.lidl.de/media/product/0/3/1/4/2/3/2/playtive-junior-diy-programmier-roboter-regular.jpg"
+<b-col>
+  <b-card
+    :title="name"
     img-alt="Image"
     img-top
     tag="article"
-    style="max-width: 20rem;"
+    style="max-width: 30rem;"
     class="mb-2"
   >
-    <b-card-text>
-      Schweißen | Maschine 1 | ✔️
-    </b-card-text>
-        <b-card-text>
-      Bohren | Maschine 2 | ✔️
-    </b-card-text>
-        <b-card-text>
-      Schrauben | Maschine 4 | 🟡
-    </b-card-text>
-            <b-card-text>
-      Lackieren | Maschine 3 | - 
-    </b-card-text>
+  <b-card-text >
+      {{ this.type }}
+  </b-card-text>
 
+  <b-container>
+  <li style="list-style-type : none" v-if="transactions.length === 0">Production starting soon...</li>
+  <li style="list-style-type : none" v-for="trans in transactions" :key="trans.id">
+    {{ trans.task }} | {{ trans.machine }} | {{ getStatus(trans.status) }}
+  </li>
+
+</b-container>
   </b-card>
+</b-col>
+
 </template>
+
+<script>
+export default {
+  props:["name", "type", "transactions"],
+  data(){
+      return{
+        successVar: "success"
+      }
+    },
+  methods:{
+      getStatus(status){
+          switch (status) {
+            case "in progress":
+              return "⏳";
+            case "done":
+              return "✔️";
+            default: "t.b.a"
+              return "tba"
+          }
+      }
+      }
+}
+</script>
