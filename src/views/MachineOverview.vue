@@ -1,7 +1,10 @@
 <template>
 <b-container>
-  <b-row align-v="center">
-    <MachineDetail v-for="(data) in theList" v-bind:key="data.id" v-bind:name="data.name" v-bind:transactions="data.transactions" v-bind:tasks="data.tasks" :id="data.id" />
+  <b-row v-if="theList" align-v="center">
+      <MachineDetail   v-for="(data) in theList" v-bind:key="data.id" v-bind:name="data.name" v-bind:transactions="data.transactions" v-bind:tasks="data.tasks" v-bind:currentProduct="data.currentProduct" :id="data.id" />
+  </b-row>
+  <b-row v-if="!theList" align-v="center">
+      <MachineDetail  v-bind:name="null" v-bind:transactions="null" v-bind:tasks="null" :id="null" />
   </b-row>
 </b-container>
 </template>
@@ -30,17 +33,28 @@ export default {
     async getMachines(){
         var responseRequest = await this.sendRequest("getMachines");
         for(var i=0; i<responseRequest.length; i++) {
-          console.log("id",responseRequest[i].id)
           var responseRequest2 = await this.sendRequest("getTransactions?machine_id="+responseRequest[i].id);
             
           var newList = []
+          var name = null
+          if (responseRequest2) {
             for(var j=0; j < responseRequest2.length; j++) {
               var response1 = responseRequest2[j]
               newList.push({Product: response1.product.name, Task: response1.task.description, End: response1.end, Begin: response1.begin, Status: response1.status})
+              if (response1.status == "in progress") {
+                name = response1.product.name
+              }
+
             }
-          responseRequest[i].transactions = newList
+            responseRequest[i].transactions = newList
+          } else {
+            responseRequest[i].transactions = null
+          }
+           responseRequest[i].currentProduct = name
+        
         }
          this.theList = responseRequest
+         console.log(this.theList)
     },
 
 
