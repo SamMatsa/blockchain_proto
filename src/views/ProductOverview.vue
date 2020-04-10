@@ -42,7 +42,6 @@ export default {
         var ep = endpoint;
         var user = "vsapiuser";
         var pass = "BejB75sV";
-        // var url = `http://localhost:8080/${ep}`;
         var url = `https://vsapi.wegmann.dev/${ep}`;
 
 
