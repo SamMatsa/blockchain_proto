@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MachineOverview from '../views/MachineOverview.vue'
 import ProductOverview from '../views/ProductOverview.vue'
+import Home from '../views/Home.vue'
 import ServiceEngineerOverview from '../views/ServiceEngineerOverview.vue'
 
 Vue.use(VueRouter)
@@ -9,8 +10,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Machine',
-    component: MachineOverview
+    name: 'Home',
+    component: Home
   },
   {
     path: '/machine',

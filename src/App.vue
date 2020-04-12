@@ -8,6 +8,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
+        <b-nav-item to="/">Home</b-nav-item>
         <b-nav-item to="/machine">Maschinen</b-nav-item>
         <b-nav-item to="/product">Produkte</b-nav-item>
         <!-- <b-nav-item to="/service">Servicetechniker</b-nav-item> -->
