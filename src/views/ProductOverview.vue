@@ -26,7 +26,7 @@ export default {
     },
     computed: {
       productChunks(){
-          return _.chunk(Object.values(this.productsFinal), 3);
+          return _.chunk(Object.values(this.productsFinal), 4);
       }
     },
     data(){
