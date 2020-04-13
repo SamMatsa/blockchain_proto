@@ -8,7 +8,6 @@
 <script>
 // @ is an alias to /src
 import HomeDetail from '@/components/HomeDetail.vue'
-import axios from 'axios'
 
 export default {
   name: 'Home',
@@ -26,19 +25,17 @@ export default {
      
     },
     async sendRequest(endpoint) {
-        var ep = endpoint;
-        var user = "vsapiuser";
-        var pass = "BejB75sV";
-        // var url = `http://localhost:8081/${ep}`;
-        var url = `https://vsapi.wegmann.dev/${ep}`;
-        var authorizationBasic = window.btoa(user + ':' + pass);
-        var config = {
-          "headers":{
-            "Authorization": "Basic " + authorizationBasic
-          }
-        };
-        var res = await axios.post(url, config);
-        return res.status;
+      console.log(endpoint)
+        var response = await fetch('https://vsapi.wegmann.dev/mgmt/startSimulation', {
+          method: "POST", 
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic dnNhcGl1c2VyOkJlakI3NXNW'
+          }});
+        let data = await response.status
+        console.log(data)
+        return data;
+
       },
       makeToastSuccess(append = false) {
         this.toastCount++
