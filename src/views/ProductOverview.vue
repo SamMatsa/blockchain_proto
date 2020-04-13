@@ -26,7 +26,7 @@ export default {
     },
     computed: {
       productChunks(){
-          return _.chunk(Object.values(this.productsFinal), 2);
+          return _.chunk(Object.values(this.productsFinal), 3);
       }
     },
     data(){
@@ -34,7 +34,8 @@ export default {
         list: [],
         polling : null,
         lastResponseObject : null,
-        productsFinal: []
+        productsFinal: [],
+        theRawArray: []
       }
     },
     methods:{
@@ -71,6 +72,7 @@ export default {
       async addTransactionsToProducts(products){
         var newArray = [];
         var productsArray = products;
+        this.theRawArray = products;
         var taskNames = await this.sendRequest("getTasks");
 
         for (var i = 0; i < productsArray.length; i++) {
@@ -123,6 +125,22 @@ export default {
               status: transactionTaskStatus})
 
           }
+
+          //Mache hier tasks
+          for (var q = 0; q < productsArray[k].tasks.length; q++){
+            if(productsArray[k].tasks.length != productTransactions.length){
+            var index = productTransactions.length;
+
+            productTransactions.push({
+              // id: transactionId,
+              machine: "-", 
+              task: productsArray[k].tasks[index].description, 
+              status: "-"})
+            }
+
+            console.log(productsArray[k].tasks[index])
+          }
+
 
           //push to clean array
           newArray.push({
