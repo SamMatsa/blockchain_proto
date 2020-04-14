@@ -40,7 +40,7 @@ export default {
             case "done":
               return "✔️";
             default: "t.b.a"
-              return "tba"
+              return "-"
           }
       }
       }
