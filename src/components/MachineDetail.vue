@@ -7,21 +7,23 @@
           img-top
           tag="article"
           class="mb-2"
-          style="max-width: 20rem;">
-        <div v-if="name">
-          <b-card-title>
-            {{name}}
-          </b-card-title>
-        </div>
-        <div v-if="!name">
-          <b-card-title>
-            Keine Maschine definiert
-          </b-card-title>
-        </div>
+          style="width: 25rem; height: 35rem; max-height:35rem; min-width: 25rem"
+          header-tag="header">
+      
+          <template v-slot:header> 
+            <div v-if="name">
+              <h6 class="mb-0">{{name}}</h6>
+            </div>
+            <div v-if="!name">
+              <h6 class="mb-0"> Keine Maschine definiert</h6>
+            </div>
+          </template>
+       
+       
         <div>
           <div v-if="tasks">
-            <b-card-text  v-for="(value) in tasks" v-bind:key="value.id">
-                {{ value.description }},  {{ value.duration }}s
+            <b-card-text  v-for="(value) in tasks.slice(0,2)" v-bind:key="value.id">
+                {{ value.description }}, {{ value.duration }}s 
             </b-card-text>
           </div>
           <div v-if="!tasks">
@@ -52,7 +54,7 @@
             <b-button v-b-modal.modal-scrollable disable>Keine Produkte</b-button>
           </div>
           <div v-if="transactions">
-            <b-button v-b-modal.modal-scrollable v-on:click="onShowModal">Alle Produkte</b-button>   
+            <b-button style="position: relative; bottom: 20px;" v-b-modal.modal-scrollable v-on:click="onShowModal">Alle Produkte</b-button>   
             <b-modal id="modal-scrollable" 
               size="xl" 
               v-if="showModal"  
