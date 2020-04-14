@@ -1,5 +1,6 @@
 <template>
 <b-container>
+  <b-spinner v-if="machines.length === 0" label="Loading..."></b-spinner>
   <b-row v-if="machines" align-v="center">
       <MachineDetail   v-for="(data) in machines" v-bind:key="data.id" v-bind:name="data.name" v-bind:transactions="data.transactions" v-bind:tasks="data.tasks" v-bind:currentProduct="data.currentProduct" :id="data.id" />
   </b-row>
@@ -40,7 +41,7 @@ export default {
           if (transactionResponse) {
             for(var j=0; j < transactionResponse.length; j++) {
               var transactions = transactionResponse[j]
-              newList.push({Product: transactions.product.name, Task: transactions.task.description, End: transactions.end, Begin: transactions.begin, Status: transactions.status})
+              newList.push({Product: transactions.product.name, Task: transactions.task.description, End: this.getDate(transactions.end), Begin: this.getDate(transactions.begin), Status: this.getStatus(transactions.status)})
               if (transactions.status == "in progress") {
                 name = transactions.product.name
               }
@@ -51,15 +52,9 @@ export default {
             machineResponse[i].transactions = null
           }
            machineResponse[i].currentProduct = name
-        
         }
          this.machines = machineResponse
     },
-
-
-    test() {
-      return "hello"
-    }, 
      async sendRequest(endpoint) {
         var ep = endpoint;
         var user = "vsapiuser";
@@ -75,6 +70,20 @@ export default {
         this.lastResponseObject = res.data;
         return res.data;
       },
+      getStatus(status){
+        switch (status) {
+          case "in progress":
+            return "⏳";
+          case "done":
+            return "✔️";
+          default: "t.b.a"
+            return "tba"
+        }
+      }, 
+      getDate(date){
+        var dateNew = new Date(date);
+        return dateNew.getHours() + ":" + dateNew.getMinutes() + ":" + dateNew.getSeconds() + " - " + dateNew.getDay() + "." + dateNew.getMonth() + "." + dateNew.getFullYear()
+      }
   },
     mounted(){
       this.getMachines();
