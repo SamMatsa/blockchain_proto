@@ -54,7 +54,7 @@
             <b-button v-b-modal.modal-scrollable disable>Keine Produkte</b-button>
           </div>
           <div v-if="transactions">
-            <b-button style="position: relative; bottom: 20px;" v-b-modal.modal-scrollable v-on:click="onShowModal">Alle Produkte</b-button>   
+            <b-button style="position: relative; bottom: 20px;" variant="success" v-b-modal.modal-scrollable v-on:click="onShowModal">Alle Produkte</b-button>   
             <b-modal id="modal-scrollable" 
               size="xl" 
               v-if="showModal"  
@@ -63,8 +63,8 @@
               no-close-on-backdrop  
               @ok="showModal=false" 
               scrollable 
-              title= "Transactions:">
-              <b-table striped hover :items="transactions"></b-table>
+              title= "Transaktionen:">
+              <b-table striped hover :items="transactions"  :fields="fields"></b-table>
             </b-modal>
           </div>
        
@@ -88,7 +88,15 @@ export default {
         transactions: Array
     }, 
     data: () => ({
-        showModal: false
+        showModal: false,
+        fields: [
+          { key: 'Product', label: 'Produkt' },
+          { key: 'Task', label: 'Aufgabe' },
+          { key: 'Begin', label: 'Beginn' },
+          { key: 'End', label: 'Ende' },
+
+          { key: 'Status', label: 'Status' },
+        ]
     }), 
     methods: {
      
