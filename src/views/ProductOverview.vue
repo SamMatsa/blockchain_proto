@@ -1,7 +1,9 @@
 <template>
         <div class="container-fluid">
+          <b-container>
+              <b-spinner v-if="productsFinal.length === 0" label="Loading..."></b-spinner>
+            </b-container>
           <div class="row">
-    <h1 v-if="productsFinal.length === 0">Loading...</h1>
 
   <div class="columns" v-for="chunk in productChunks" :key="chunk.id">   
     <product-detail
