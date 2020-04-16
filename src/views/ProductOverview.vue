@@ -20,7 +20,6 @@
 <script>
 import ProductDetail from '../components/ProductDetail';
 import _ from 'lodash'
-import axios from 'axios';
 
 export default {
     components:{
@@ -41,23 +40,22 @@ export default {
       }
     },
     methods:{
-      async sendRequest(endpoint){
+      async getToken() {
+      var token = await localStorage.getItem("tk")
+      return token
+      },
+      async sendRequest(endpoint) {
+        var token = await this.getToken()
         var ep = endpoint;
-        var user = "vsapiuser";
-        var pass = "BejB75sV";
         var url = `https://vsapi.wegmann.dev/${ep}`;
-
-
-        var authorizationBasic = window.btoa(user + ':' + pass);
-        var config = {
-          "headers":{
-            "Authorization": "Basic " + authorizationBasic
-          }
-        };
-
-        var res = await axios.get(url, config);
-        this.lastResponseObject = res.data;
-        return res.data;
+        var response = await fetch(url, {
+          method: "GET", 
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + token
+          }});
+        var data = await response.json()
+        return data;
       },
 
       pollDataIntervall(){
@@ -140,7 +138,6 @@ export default {
               status: "-"})
             }
 
-            console.log(productsArray[k].tasks[index])
           }
 
 
@@ -162,6 +159,14 @@ export default {
     created(){
       this.pollData();
       this.pollDataIntervall();
+    }, 
+    async mounted(){
+      var token = await this.getToken()
+      if(!token){
+        alert("No access")
+        this.$router.push({name:'Login'})
+      }
+   
     }
 
 }

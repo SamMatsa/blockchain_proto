@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 
 import MachineDetail from '../components/MachineDetail'
 export default {
@@ -55,21 +54,24 @@ export default {
         }
          this.machines = machineResponse
     },
-     async sendRequest(endpoint) {
-        var ep = endpoint;
-        var user = "vsapiuser";
-        var pass = "BejB75sV";
-        var url = `https://vsapi.wegmann.dev/${ep}`;
-        var authorizationBasic = window.btoa(user + ':' + pass);
-        var config = {
-          "headers":{
-            "Authorization": "Basic " + authorizationBasic
-          }
-        };
-        var res = await axios.get(url, config);
-        this.lastResponseObject = res.data;
-        return res.data;
-      },
+    async getToken() {
+      var token = await localStorage.getItem("tk")
+      return token
+    },
+    async sendRequest(endpoint) {
+      var token = await this.getToken()
+      var ep = endpoint;
+      var url = `https://vsapi.wegmann.dev/${ep}`;
+      var response = await fetch(url, {
+        method: "GET", 
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ' + token
+        }});
+      var data = await response.json()
+      return data;
+
+    },
       getStatus(status){
         switch (status) {
           case "in progress":
@@ -85,12 +87,19 @@ export default {
         return dateNew.getHours() + ":" + dateNew.getMinutes() + ":" + dateNew.getSeconds() + " - " + dateNew.getDay() + "." + dateNew.getMonth() + "." + dateNew.getFullYear()
       }
   },
-    mounted(){
-      this.getMachines();
-      setInterval(() => {
-        console.log("Refresh!")
+    async mounted(){
+      var token = await this.getToken()
+      if(!token){
+        alert("No access")
+        this.$router.push({name:'Login'})
+      } else {
         this.getMachines();
-      }, 10000);
+        setInterval(() => {
+          this.getMachines();
+        }, 10000);
+      }
+
+   
     }
 }
 

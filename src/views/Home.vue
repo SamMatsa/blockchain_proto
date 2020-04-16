@@ -2,6 +2,7 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
     <HomeDetail :startProcess="(ev) => startProcess()" msg="Herzlich Willkommen zu unserer Agenten App"/>
+    <p @click="remove()">Remove token</p>
   </div>
 </template>
 
@@ -16,7 +17,7 @@ export default {
   }, 
   methods: {
     async startProcess() {
-      var simulationResponse = await this.sendRequest("mgmt/startSimulation");
+      var simulationResponse = await this.sendRequest();
       if (simulationResponse=="200") {
         this.makeToastSuccess()
       } else {
@@ -24,16 +25,19 @@ export default {
       }
      
     },
-    async sendRequest(endpoint) {
-      console.log(endpoint)
+    async getToken() {
+      var token = await localStorage.getItem("tk")
+      return token
+    },
+    async sendRequest() {
+        var token = await this.getToken()
         var response = await fetch('https://vsapi.wegmann.dev/mgmt/startSimulation', {
           method: "POST", 
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Basic dnNhcGl1c2VyOkJlakI3NXNW'
+            'Authorization': 'Basic ' + token
           }});
         let data = await response.status
-        console.log(data)
         return data;
 
       },
@@ -54,7 +58,20 @@ export default {
           appendToast: append
         })
       },
+      remove(){
+        // console.log(localStorage.getItem("tk"))
+        localStorage.removeItem("tk")
+        // console.log(localStorage.getItem("tk"))
+      }
 
+  }, 
+  async mounted() {
+    var token = await this.getToken()
+    if(!token){
+      alert("No access")
+      this.$router.push({name:'Login'})
+    }
   }
+  
 }
 </script>
