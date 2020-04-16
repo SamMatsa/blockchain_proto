@@ -62,13 +62,9 @@
               })
             },
              async setToken(user, passwd) {
-              // var user = await prompt("Enter your username : ", "");
-
-              // var passwd = await prompt("Enter Password : ", "");
               var authorizationBasic = window.btoa(user + ':' + passwd);
               localStorage.setItem("tk", authorizationBasic)
               this.sendRequest()
-              // console.log(localStorage.getItem("tk"))
             },
             async getToken() {
               var token = await localStorage.getItem("tk")
@@ -76,7 +72,6 @@
             },
             async sendRequest() {
               var token = await this.getToken()
-              // console.log(token)
               var url = `https://vsapi.wegmann.dev/getTasks`;
               try {
                   var response = await fetch(url, {
@@ -87,7 +82,6 @@
                     }});
 
                   var data = await response
-                  // console.log(data)
                   if (data.status != 200) {
                     localStorage.removeItem("tk")
                     alert("Wrong token")
@@ -101,9 +95,7 @@
               
             },
             remove(){
-              // console.log(localStorage.getItem("tk"))
               localStorage.removeItem("tk")
-              // console.log(localStorage.getItem("tk"))
             }
         }, 
         async mounted(){

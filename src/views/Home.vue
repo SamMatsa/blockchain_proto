@@ -2,7 +2,7 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
     <HomeDetail :startProcess="(ev) => startProcess()" msg="Herzlich Willkommen zu unserer Agenten App"/>
-    <p @click="remove()">Remove token</p>
+    <b-button @click="remove()" variant="info" class="m-1"> Remove Token</b-button>
   </div>
 </template>
 
@@ -59,9 +59,8 @@ export default {
         })
       },
       remove(){
-        // console.log(localStorage.getItem("tk"))
         localStorage.removeItem("tk")
-        // console.log(localStorage.getItem("tk"))
+        location.reload();        
       }
 
   }, 
