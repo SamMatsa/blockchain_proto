@@ -156,18 +156,18 @@ export default {
     beforeDestroy(){
       clearInterval(this.polling);
     },
-    created(){
-      this.pollData();
-      this.pollDataIntervall();
-    }, 
-    async mounted(){
+    async created(){
       var token = await this.getToken()
       if(!token){
         alert("No access")
         this.$router.push({name:'Login'})
+      } else {
+        this.pollData();
+        this.pollDataIntervall();
       }
-   
-    }
+    
+    }, 
+    
 
 }
 </script>
