@@ -20,6 +20,7 @@ export default {
     machines: [],
     new: [],
     errors: [],
+    polling : null,
     url: 'https://vsapi.wegmann.dev/getMachines',
     username: 'vsapiuser',
     password: 'BejB75sV',
@@ -87,6 +88,10 @@ export default {
         return dateNew.getHours() + ":" + dateNew.getMinutes() + ":" + dateNew.getSeconds() + " - " + dateNew.getDay() + "." + dateNew.getMonth() + "." + dateNew.getFullYear()
       }
   },
+    
+    beforeDestroy(){
+      clearInterval(this.polling);
+    },
     async mounted(){
       var token = await this.getToken()
       if(!token){
@@ -94,7 +99,7 @@ export default {
         this.$router.push({name:'Login'})
       } else {
         this.getMachines();
-        setInterval(() => {
+        this.polling = setInterval(() => {
           this.getMachines();
         }, 10000);
       }
