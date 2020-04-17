@@ -16,6 +16,7 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
+        <b-nav-item @click="logout()">Logout</b-nav-item>
 
       
       </b-navbar-nav>
@@ -25,7 +26,18 @@
     <router-view/>
   </div>
 </template>
+<script>
+// @ is an alias to /src
 
+export default {
+ 
+  methods: {
+      logout() {
+         localStorage.removeItem("tk")
+         this.$router.push({name:'Login'})
+      }
+  }}
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

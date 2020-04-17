@@ -2,7 +2,6 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
     <HomeDetail :startProcess="(ev) => startProcess()" msg="Herzlich Willkommen zu unserer Agenten App"/>
-    <b-button @click="remove()" variant="info" class="m-1"> Remove Token</b-button>
   </div>
 </template>
 
