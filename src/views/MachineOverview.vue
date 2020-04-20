@@ -41,7 +41,7 @@ export default {
           if (transactionResponse) {
             for(var j=0; j < transactionResponse.length; j++) {
               var transactions = transactionResponse[j]
-              newList.push({Product: transactions.product.name, Task: transactions.task.description, End: this.getDate(transactions.end), Begin: this.getDate(transactions.begin), Status: this.getStatus(transactions.status)})
+              newList.push({Product: transactions.product.name, Task: transactions.task.description, End: transactions.end, Begin: transactions.begin, Status: this.getStatus(transactions.status)})
               if (transactions.status == "in progress") {
                 name = transactions.product.name
               }
@@ -82,10 +82,6 @@ export default {
           default: "t.b.a"
             return "tba"
         }
-      }, 
-      getDate(date){
-        var dateNew = new Date(date);
-        return dateNew.getHours() + ":" + dateNew.getMinutes() + ":" + dateNew.getSeconds() + " - " + dateNew.getDay() + "." + dateNew.getMonth() + "." + dateNew.getFullYear()
       }
   },
     
